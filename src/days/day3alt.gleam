@@ -1,8 +1,8 @@
-import gleam/result
 import gleam/int
 import gleam/io
 import gleam/list
 import gleam/string
+import simplifile.{read}
 
 pub type Token {
     Start
@@ -15,20 +15,42 @@ pub type Token {
 
 
 pub fn main(){
-  "mul(123)"
-  |> string.to_graphemes()
-  |> tokenizer()
+  get_data()
+  |> list.map(one_line)
+  |> int.sum
   |> io.debug
 
-  "mul(123,234)"
-  |> string.to_graphemes()
-  |> tokenizer()
-  |> combine_digits()
-  |> io.debug
-  |> parse_good
-  |> io.debug
+
   }
 
+fn one_line(d:String) -> Int {
+  d
+  |> string.to_graphemes
+  |> tokenizer
+  |> combine_digits
+  |> parse_good
+
+  }
+
+pub fn get_data() {// -> List(List(Int)){
+  let filename = "aoc24-d3-short.txt"
+  let filename = "aoc24-d3.txt"
+  // let filename = "day2-short.txt"
+  // result.unwrap(read(from:filename), "File not found")
+  
+  case read(from:filename){
+    Ok( x ) -> parse_data(x)
+    _ -> panic as "cannot open file"
+   }
+}
+
+
+pub fn parse_data(text: String) ->List(String){
+    let r: List(String)= string.replace(text, "\r\n", "\n")
+    |> string.split("\n")
+    // let d: List(List(String)) = 
+    //return
+}
 
 pub fn tokenizer(d: List(String)) -> List(Token){
   case d {
