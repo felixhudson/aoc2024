@@ -10,6 +10,7 @@ pub type Token {
     Comma
     End
     Empty
+    Bad
   }
 
 
@@ -37,7 +38,7 @@ pub fn tokenizer(d: List(String)) -> List(Token){
       [x, ..rest] -> {
                   case is_digit(x) {
                       True -> list.flatten([[Digits(x)] , tokenizer(rest)])
-                      False -> list.flatten([[] , tokenizer(rest)])}
+                      False -> list.flatten([[Bad] , tokenizer(rest)])}
                     }
       _ -> []
     }
@@ -62,7 +63,7 @@ fn is_digit(a:String) -> Bool {
   }
 
 
-fn combine_digits(d:List(Token)) -> List(Token) {
+pub fn combine_digits(d:List(Token)) -> List(Token) {
   rec_combine_digits(d, "")
 
   }
@@ -78,7 +79,7 @@ fn rec_combine_digits(d:List(Token), acc:String) -> List(Token) {
     }
 }
 
-fn parse_good(d:List(Token)){
+pub fn parse_good(d:List(Token)){
   case d {
       [Start, Digits(x), Comma, Digits(y),End, ..rest] -> mult(x,y) + parse_good(rest)
       [_, ..rest] -> parse_good(rest)
