@@ -39,7 +39,7 @@ pub fn tokenizer(d: List(String)) -> List(Token){
                       True -> list.flatten([[Digits(x)] , tokenizer(rest)])
                       False -> list.flatten([[] , tokenizer(rest)])}
                     }
-      _ -> [Empty]
+      _ -> []
     }
 
   }
@@ -49,6 +49,13 @@ fn is_digit(a:String) -> Bool {
         "1" -> True
         "2" -> True
         "3" -> True
+        "4" -> True
+        "5" -> True
+        "6" -> True
+        "7" -> True
+        "8" -> True
+        "9" -> True
+        "0" -> True
         "," -> True
         _ -> False
       }
@@ -74,6 +81,7 @@ fn rec_combine_digits(d:List(Token), acc:String) -> List(Token) {
 fn parse_good(d:List(Token)){
   case d {
       [Start, Digits(x), Comma, Digits(y),End, ..rest] -> mult(x,y) + parse_good(rest)
+      [_, ..rest] -> parse_good(rest)
       _ -> 0
     }
 
@@ -86,6 +94,4 @@ fn mult(x:String,y) -> Int {
       Ok(a), Ok(b) -> a*b
       _ , _ -> panic as "error parsing"
     }
-
-
   }

@@ -54,10 +54,10 @@ pub fn investigate(data) -> Bool{
 
   // io.debug(#(smallmoves, nonzero, constant, data,diff))
   let r = smallmoves && nonzero && constant 
-  case r {
-      False -> io.debug(data)
-      True -> [1]
-    }
+  // case r {
+  //     False -> io.debug(data)
+  //     True -> [1]
+  //   }
   r
 
   }
