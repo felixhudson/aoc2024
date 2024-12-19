@@ -2,7 +2,7 @@ import gleam/io
 import days/day1
 import days/day2
 import days/day3
-import day2example
+// import day2example
 import days/day3alt
 import days/day4
 

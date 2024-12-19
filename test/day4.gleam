@@ -1,5 +1,6 @@
 import gleam/dict
 import gleam/io
+import gleam/list
 import gleam/string
 import gleeunit
 import gleeunit/should
@@ -17,7 +18,9 @@ pub fn hello_world_test() {
 
 pub fn perline_test(){
     let loc: day4.XMAS = day4.C([],dict.new(),dict.new(),dict.new())
-    string.to_graphemes("xxxmas")
+    let r = string.to_graphemes("XXXMAS")
     |> day4.parseall(loc, 0, 0)
-    |> io.debug
+
+    list.length(r.x)
+    |> should.equal(3)
   }
