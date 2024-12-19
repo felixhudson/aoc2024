@@ -1,3 +1,4 @@
+import gleam/dict
 import gleam/io
 import gleam/string
 import gleeunit
@@ -15,7 +16,7 @@ pub fn hello_world_test() {
 }
 
 pub fn perline_test(){
-    let loc: day4.XMAS = day4.C([],[],[],[])
+    let loc: day4.XMAS = day4.C([],dict.new(),dict.new(),dict.new())
     string.to_graphemes("xxxmas")
     |> day4.parseall(loc, 0, 0)
     |> io.debug
