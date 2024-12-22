@@ -36,7 +36,7 @@ pub fn main(){
 
 
     
-    let input = test_data()
+    let input = get_data()
     |> allfile
     // |> io.debug
  
@@ -49,12 +49,16 @@ pub fn main(){
     io.debug("parse the books")
     let allbooks=str2int( input.1 )
 
+    let short = list.take(allbooks, 2) 
+    |> io.debug
+    
+
     io.debug("test each pair of pages")
     // take the bottom of file convert to ints and then  
-    let report =  list.map( allbooks, fn(x) {testbook(x, allrules)}) 
+    let report =  list.map( short, fn(x) {testbook(x, allrules)}) 
     |> list.map( fn(y) {list.all(y, fn(x){x==True})})
     //
-
+    io.debug("prepare report")
     list.zip(report, allbooks)
     |> good_middle
     |> int.sum
@@ -101,7 +105,7 @@ fn testbook(d: List(Int), store:Graph) {
   list.window_by_2(d)
   // |> list.map(fn(x){ dict.has_key(store, x.0)})
   |> list.map(fn(x){ 
-    bfs_all(store, [x.0],[])
+    bfs_all(store, [x.0],[], x.1)
     |> list.contains(x.1)
   })
   
@@ -112,6 +116,14 @@ fn test_data(){
     case simplifile.read(filename) {
         Ok(x) -> x
         Error(_e) -> panic as "cant read test file"
+      }
+  }
+
+fn get_data(){
+    let filename = "data\\aoc24-day5.txt"
+    case simplifile.read(filename) {
+        Ok(x) -> x
+        Error(_e) -> panic as "cant read data file"
       }
   }
 
@@ -143,26 +155,39 @@ pub fn datainsert( store:Graph, d: Edge) {
   ) 
 }
 
+
+fn lenght_test(d:List(a)) {
+    case list.length(d) {
+        x if x % 10 == 0 -> {io.debug("loop " <> int.to_string(x)) io.debug(d) ""}
+        _ -> ""
+      }
+  }
+
 // writting bfs is hard, lets just return everything we find
 //
 
-pub fn bfs_all(graph:Graph, node:List(Int), acc: List(Int)) -> List(Int){
+pub fn bfs_all(graph:Graph, node:List(Int), acc: List(Int), target: Int) -> List(Int){
   case node{
+      [x,..] if x == target -> [x, ..acc]
       // there are still nodes to traverse so look at head
-      [current,..rest] -> case dict.get(graph, current){
+      [current,..rest] -> case dict.get(graph, current), list.contains(acc, current){
+                  // we have been here before so skip this node
+                  _, True  -> bfs_all(graph, rest, acc, target)
                   // found children so add to front of list and recurse
-                  Ok(children) -> bfs_all(graph, list.flatten([ children, rest ]), [current, ..acc])
+                  Ok(children), False -> bfs_all(graph, list.flatten([ children, rest ]), [current, ..acc], target)
                   // no children here, move to the next in our node list
-                  Error(_) ->  bfs_all(graph, rest, [current, ..acc])
+                  Error(_), False ->  bfs_all(graph, rest, [current, ..acc], target)
         }      
       // node list is empty so return everything we visited
-      [] -> acc 
+      [] -> [] 
 
     }
       // let here: List(Int) = dict.get(graph, node)      
       // |> result.unwrap([])
       // list.map(here, fn(x) {bfs_all(graph, x)})
   }
+
+
 
 pub fn good_middle(d: List(#(Bool, List(Int)))){
     list.filter(d, fn(x) {x.0 == True})
