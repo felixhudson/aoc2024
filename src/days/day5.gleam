@@ -4,18 +4,15 @@
 // Then a list of Ints
 // Check that this list obeys all of the above pairs
 
-import gleam/int
 import gleam/result
+import gleam/int
 import gleam/string
 import gleam/io
-import gleam/pair
 import gleam/list
 import gleam/dict.{type Dict}
 import simplifile
 import gleam/option.{Some,None}
 
-type Pagerule = #(Int,Int)
-type Rules = Dict(Pagerule,Bool)
 
 // Idea, parse pairs into a directed graph
 // find node that doesnt exist in any other (ie the start)
@@ -27,7 +24,7 @@ type Rules = Dict(Pagerule,Bool)
 
 
 pub fn main(){
-    let store : Rules = dict.new()
+    let store : Graph = dict.new()
     
     let rules = [1,2,3,4]
     |> list.window_by_2()
@@ -38,39 +35,34 @@ pub fn main(){
     // |> io.debug
 
 
-    "1|2\n5|6\n"
-    |> string.split("\n")
-    |> parserules()
-    |> break(store)
-    // |> io.debug
     
     let input = test_data()
     |> allfile
     // |> io.debug
-  
+ 
+    io.debug("parse the rules")
     // take top of file and make a dict of the rules
     let allrules = parserules(input.0)
     |> break(store)
     |> io.debug
 
+    io.debug("parse the books")
     let allbooks=str2int( input.1 )
 
+    io.debug("test each pair of pages")
     // take the bottom of file convert to ints and then  
     let report =  list.map( allbooks, fn(x) {testbook(x, allrules)}) 
-    |> io.debug
-    // |> list.all(fn(x){x==True})
+    |> list.map( fn(y) {list.all(y, fn(x){x==True})})
     //
 
     list.zip(report, allbooks)
+    |> good_middle
+    |> int.sum
     |> io.debug
     
 
 }
 
-type Inputs {
-    Rule(String)
-    Book(String)
-  }
 
 fn allfile(d:String) {
   let k = string.replace(d,"\r\n","\n")
@@ -81,7 +73,7 @@ fn allfile(d:String) {
         _ -> panic as "Input needs rules and books"
       }
 }
-fn parserules(d:List(String)) {
+pub fn parserules(d:List(String)) {
     d
     |> list.filter_map(string.split_once(_,"|"))
     |> list.map(toint)
@@ -89,7 +81,7 @@ fn parserules(d:List(String)) {
 
   }
 
-fn toint(d: #(String,String))-> Pagerule {
+fn toint(d: #(String,String))-> Edge {
     case int.parse(d.0), int.parse(d.1){
         Ok(x),Ok(y) -> #(x,y)
         _, _ -> panic as "cant convert both ints"
@@ -101,13 +93,18 @@ fn toint(d: #(String,String))-> Pagerule {
 
 // break a list of ints into pairs into a set
 
-fn break(d:List(Pagerule), store:Rules) -> Rules{
-  list.fold(d, store, with: fn(x, y:Pagerule) {dict.insert(x,y,True)})
+pub fn break(d:List(Edge), store:Graph) -> Graph{
+  list.fold(d, store, with: fn(x, y:Edge) {datainsert(x,y)})
 }
 
-fn testbook(d: List(Int), store:Rules) {
+fn testbook(d: List(Int), store:Graph) {
   list.window_by_2(d)
-  |> list.map(fn(x){ dict.has_key(store, x)})
+  // |> list.map(fn(x){ dict.has_key(store, x.0)})
+  |> list.map(fn(x){ 
+    bfs_all(store, [x.0],[])
+    |> list.contains(x.1)
+  })
+  
 }
 
 fn test_data(){
@@ -167,3 +164,15 @@ pub fn bfs_all(graph:Graph, node:List(Int), acc: List(Int)) -> List(Int){
       // list.map(here, fn(x) {bfs_all(graph, x)})
   }
 
+pub fn good_middle(d: List(#(Bool, List(Int)))){
+    list.filter(d, fn(x) {x.0 == True})
+    |> list.map(fn(x) { let l = list.length(x.1)/2
+
+    let m = list.drop(x.1,l)
+    |> list.first()
+    case m{
+        Ok(x) -> x
+        Error(_) -> panic as "cannot locate middle"
+      }
+    })
+  }
