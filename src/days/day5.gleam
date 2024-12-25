@@ -38,24 +38,20 @@ pub fn main(){
     
     let input = get_data()
     |> allfile
-    // |> io.debug
  
     io.debug("parse the rules")
     // take top of file and make a dict of the rules
     let allrules = parserules(input.0)
     |> break(store)
-    |> io.debug
 
     io.debug("parse the books")
     let allbooks=str2int( input.1 )
 
-    let short = list.take(allbooks, 2) 
-    |> io.debug
     
 
     io.debug("test each pair of pages")
     // take the bottom of file convert to ints and then  
-    let report =  list.map( short, fn(x) {testbook(x, allrules)}) 
+    let report =  list.map( allbooks, fn(x) {testbook(x, allrules)}) 
     |> list.map( fn(y) {list.all(y, fn(x){x==True})})
     //
     io.debug("prepare report")
