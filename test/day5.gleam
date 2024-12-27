@@ -2,6 +2,7 @@ import gleam/io
 import gleam/list
 import gleeunit/should
 import gleam/dict
+import gleam/set
 import gleam/string
 import gleeunit
 import days/day5.{type Graph}
@@ -32,16 +33,17 @@ pub fn bfs_test(){
 }
 
 pub fn parse_test(){
-  let store : Graph = dict.new()
+  // let store : Graph = dict.new()
+  let store: day5.RuleRecord = day5.new_rulerecord()
   let r = "1|2\n5|6\n"
   |> string.split("\n")
   |> day5.parserules()
   |> day5.break(store)
 
-  dict.get(r, 1)
-  |> should.equal(Ok([2]))
-  dict.get(r, 5)
-  |> should.equal(Ok([6]))
+  set.contains(r.good, #(1,2))
+  |> should.be_true
+  set.contains(r.good, #(5,6))
+  |> should.be_true
 }
 
 pub fn middle_test() {
@@ -52,4 +54,33 @@ pub fn middle_test() {
     [#(True, [1,2,99,4,5])]
     |> day5.good_middle()
     |> should.equal([99])
+  }
+
+pub fn sequence_test() {
+  let d :day5.Graph = dict.new() 
+  |> day5.datainsert(#(32,15))
+  |> day5.datainsert(#(15,2))
+  |> day5.datainsert(#(2,10))
+
+  let book = [ 15, 32, 13, 96, 47, 29, 78 ]
+  let target = 32
+  day5.bfs_all(d,[15],[], target)
+  |> should.equal([10,2,15])
+}
+
+pub fn set_test() {
+    let rules : day5.RuleSet = set.new()
+    |> set.insert(#(1,2))
+    |> set.insert(#(99,98))
+
+    let a: day5.RuleRecord = day5.new_rulerecord()
+    |> day5.insert_set( #(1,2))
+    |> day5.insert_set( #(3,5))
+    |> io.debug
+
+    let t = [#(1,2)]
+    day5.search_sets(t,a)
+    |> io.debug
+    // |> should.be_true
+
   }

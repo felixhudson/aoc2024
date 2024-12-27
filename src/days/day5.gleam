@@ -4,12 +4,12 @@
 // Then a list of Ints
 // Check that this list obeys all of the above pairs
 
-import gleam/result
 import gleam/int
 import gleam/string
 import gleam/io
 import gleam/list
 import gleam/dict.{type Dict}
+import gleam/set.{type Set}
 import simplifile
 import gleam/option.{Some,None}
 
@@ -24,7 +24,8 @@ import gleam/option.{Some,None}
 
 
 pub fn main(){
-    let store : Graph = dict.new()
+    // let store : Graph = dict.new()
+    let store : RuleRecord = new_rulerecord()
     
     let rules = [1,2,3,4]
     |> list.window_by_2()
@@ -52,13 +53,14 @@ pub fn main(){
     io.debug("test each pair of pages")
     // take the bottom of file convert to ints and then  
     let report =  list.map( allbooks, fn(x) {testbook(x, allrules)}) 
-    |> list.map( fn(y) {list.all(y, fn(x){x==True})})
-    //
-    io.debug("prepare report")
-    list.zip(report, allbooks)
-    |> good_middle
-    |> int.sum
     |> io.debug
+    // |> list.map( fn(y) {list.all(y, fn(x){x==True})})
+    //
+    // io.debug("prepare report")
+    // list.zip(report, allbooks)
+    // |> good_middle
+    // |> int.sum
+    // |> io.debug
     
 
 }
@@ -93,17 +95,18 @@ fn toint(d: #(String,String))-> Edge {
 
 // break a list of ints into pairs into a set
 
-pub fn break(d:List(Edge), store:Graph) -> Graph{
-  list.fold(d, store, with: fn(x, y:Edge) {datainsert(x,y)})
+pub fn break(d:List(Rule), store:RuleRecord) -> RuleRecord{
+  // list.fold(d, store, with: fn(x, y:Edge) {datainsert(x,y)})
+  list.fold(d, store, with: fn(x, y:Rule) {insert_set(x,y)})
 }
 
-fn testbook(d: List(Int), store:Graph) {
+fn testbook(d: List(Int), store:RuleRecord) {
   list.window_by_2(d)
   // |> list.map(fn(x){ dict.has_key(store, x.0)})
-  |> list.map(fn(x){ 
-    bfs_all(store, [x.0],[], x.1)
-    |> list.contains(x.1)
-  })
+  // |> list.map(fn(x){ 
+    // bfs_all(store, [x.0],[], x.1)
+    |> search_sets(store) 
+  
   
 }
 
@@ -115,7 +118,7 @@ fn test_data(){
       }
   }
 
-fn get_data(){
+pub fn get_data(){
     let filename = "data\\aoc24-day5.txt"
     case simplifile.read(filename) {
         Ok(x) -> x
@@ -151,6 +154,18 @@ pub fn datainsert( store:Graph, d: Edge) {
   ) 
 }
 
+pub type Rule = #(Int,Int)
+pub type RuleSet = Set(Rule)
+pub type RuleRecord {AllRules(good:RuleSet, bad:RuleSet)}
+
+pub fn new_rulerecord() {
+    AllRules(good:set.new(), bad:set.new())
+}
+
+pub fn insert_set(r:RuleRecord, extra:Rule){
+    let rev = #(extra.1, extra.0)
+    AllRules(set.insert(r.good, extra), set.insert(r.bad, rev))
+}
 
 fn lenght_test(d:List(a)) {
     case list.length(d) {
@@ -159,6 +174,15 @@ fn lenght_test(d:List(a)) {
       }
   }
 
+
+// the list of rules is cicular so we need to not look at recursion
+pub fn search_sets(rules:List(Rule), a: RuleRecord) {
+    let s:RuleSet = set.from_list(rules)
+    let good = set.is_subset(s,a.good)
+    // we want to know if any rule is in our book and the bad list
+    let bad = set.intersection(s,a.bad) 
+    #(good , set.size(bad) == 0 )
+}
 // writting bfs is hard, lets just return everything we find
 //
 
@@ -175,7 +199,7 @@ pub fn bfs_all(graph:Graph, node:List(Int), acc: List(Int), target: Int) -> List
                   Error(_), False ->  bfs_all(graph, rest, [current, ..acc], target)
         }      
       // node list is empty so return everything we visited
-      [] -> [] 
+      [] -> acc 
 
     }
       // let here: List(Int) = dict.get(graph, node)      
