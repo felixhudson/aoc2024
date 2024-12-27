@@ -53,14 +53,13 @@ pub fn main(){
     io.debug("test each pair of pages")
     // take the bottom of file convert to ints and then  
     let report =  list.map( allbooks, fn(x) {testbook(x, allrules)}) 
-    |> io.debug
     // |> list.map( fn(y) {list.all(y, fn(x){x==True})})
     //
-    // io.debug("prepare report")
-    // list.zip(report, allbooks)
-    // |> good_middle
-    // |> int.sum
-    // |> io.debug
+    io.debug("prepare report")
+    list.zip(report, allbooks)
+    |> good_middle
+    |> int.sum
+    |> io.debug
     
 
 }
@@ -181,7 +180,7 @@ pub fn search_sets(rules:List(Rule), a: RuleRecord) {
     let good = set.is_subset(s,a.good)
     // we want to know if any rule is in our book and the bad list
     let bad = set.intersection(s,a.bad) 
-    #(good , set.size(bad) == 0 )
+    good && set.size(bad) == 0 
 }
 // writting bfs is hard, lets just return everything we find
 //
