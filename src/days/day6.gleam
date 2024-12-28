@@ -1,3 +1,5 @@
+import gleam/int
+import simplifile
 import gleam/list
 import gleam/io
 import gleam/string
@@ -16,11 +18,15 @@ import gleam/set
 pub fn main() {
     let data = get_data()
     let start = find_start(data)
-    parse_matrix(data)
+    |> io.debug
+    let count = parse_matrix(data)
+    |> io.debug
     |> move_setup(start)
     |> io.debug
-    |> set.size
-    |> io.debug
+    |> set.size 
+
+    let answer = int.to_string(count )
+    io.println("number of cells " <> answer)
 }
 
 type Pair = #(Int,Int)
@@ -29,7 +35,12 @@ type Board {
   }
 
 fn get_data() -> String {
-    ".#..\r\n#..#\r\n.^..\r\n...."
+  let filename = "data\\aoc24-d6.txt"
+  case simplifile.read(filename){
+      Ok(x) -> x
+      Error(_) -> panic as "Cannot open file"
+    }
+  
 }
 
 fn parse_matrix(d:String) -> Board{
@@ -74,7 +85,7 @@ pub fn find_start(d:String) -> Pair{
       Error(_) -> panic as "cant access lines to find x postion"
     }
 
-  #(xpos-1,ypos)
+  #(xpos,ypos-1)
 }
 
 fn new_direction(old:Pair) -> Pair{
@@ -124,3 +135,15 @@ fn out_of_bounds(matrix:Board, loc: Pair) -> Bool {
 fn apply_dir(a: Pair,b:Pair){
     #(a.0+b.0,a.1+b.1)
 }
+fn get_test() {
+    "....#.....
+.........#
+..........
+..#.......
+.......#..
+..........
+.#..^.....
+........#.
+#.........
+......#..."
+  }
