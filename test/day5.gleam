@@ -76,11 +76,9 @@ pub fn set_test() {
     let a: day5.RuleRecord = day5.new_rulerecord()
     |> day5.insert_set( #(1,2))
     |> day5.insert_set( #(3,5))
-    |> io.debug
 
     let t = [#(1,2)]
     day5.search_sets(t,a)
-    |> io.debug
     // |> should.be_true
 
   }
