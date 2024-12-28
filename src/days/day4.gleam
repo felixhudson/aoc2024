@@ -53,8 +53,8 @@ SAMXS"
 }
 
 fn get_data() {
-    let filename = "day4-short.txt"
-    let filename = "day4.txt"
+    let filename = "data\\day4-short.txt"
+    let filename = "data\\day4.txt"
     case simplifile.read(from:filename){
       Ok( x ) -> x
       _ -> panic as "cannot open file"

@@ -34,7 +34,7 @@ fn part1(){
 
 fn parse_file() {
   // parses input file into two lists of integers
-  let filename = "aoc24-d1.txt"
+  let filename = "data\\aoc24-d1.txt"
   // result.unwrap(read(from:filename), "File not found")
   
   let pairs = read(from:filename)

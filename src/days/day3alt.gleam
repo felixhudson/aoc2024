@@ -33,8 +33,8 @@ fn one_line(d:String) -> Int {
   }
 
 pub fn get_data() {// -> List(List(Int)){
-  let filename = "aoc24-d3-short.txt"
-  let filename = "aoc24-d3.txt"
+  let filename = "data\\aoc24-d3-short.txt"
+  let filename = "data\\aoc24-d3.txt"
   // let filename = "day2-short.txt"
   // result.unwrap(read(from:filename), "File not found")
   

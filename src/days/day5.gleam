@@ -110,7 +110,7 @@ fn testbook(d: List(Int), store:RuleRecord) {
 }
 
 fn test_data(){
-    let filename = "aoc24-d5-short.txt"
+    let filename = "data\\aoc24-d5-short.txt"
     case simplifile.read(filename) {
         Ok(x) -> x
         Error(_e) -> panic as "cant read test file"

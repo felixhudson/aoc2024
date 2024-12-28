@@ -28,7 +28,7 @@ pub fn run() {
 }
 
 pub fn get_data() {// -> List(List(Int)){
-  let filename = "aoc24-d2.txt"
+  let filename = "data\\aoc24-d2.txt"
   // let filename = "day2-short.txt"
   // result.unwrap(read(from:filename), "File not found")
   

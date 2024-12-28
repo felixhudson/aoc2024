@@ -62,7 +62,7 @@ fn take_two(d, acc1: List(Int), acc2: List(Int)){
 
 fn parse_file() {
   // parses input file into a flat list of integers
-  let filename = "aoc24-d1.txt"
+  let filename = "data\\aoc24-d1.txt"
   // result.unwrap(read(from:filename), "File not found")
   
   let pairs = read(from:filename)
