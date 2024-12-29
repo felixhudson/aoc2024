@@ -1,3 +1,4 @@
+import simplifile
 import gleam/int
 import gleam/string
 import gleam/io
@@ -7,11 +8,23 @@ import gleam/option.{type Option, None, Some}
 
 pub fn main(){
     [2,3,4]
-    |> all_comb(9, 0)
+    |> try_comb(9)
 
     "1234: 1 2 3 4\r\n222: 3 4 5s"
     |> parse_text
+
+    get_data()
+    |> parse_text
+    |> result.map(fn(x) {list.map(x, compute_line)})
+    |> result.map(option.values)
+    |> result.map(int.sum)
     |> io.debug
+
+
+}
+
+fn compute_line(d: #(Int, List(Int))){
+    try_comb(d.1,d.0)
   }
 
 pub fn try_comb (d:List(Int), target:Int) -> Option(Int){
@@ -61,8 +74,9 @@ fn make_element(d:#(String, String) ){
 fn parse_text(d:String){
     let r = string.replace(d,"\r\n","\n")
     |> string.split("\n")
+    |> list.filter(fn(x) { x !=""})
     |> list.map(string.split_once(_,":") )
-    // if all splits were good
+    // if all splits were good 
     |> result.all
     |> result.map(list.map(_,make_element))
     |> result.try(fn(x) {
@@ -77,4 +91,13 @@ fn parse_text(d:String){
 
     // })
     // |> io.debug
+}
+
+fn get_data() -> String {
+  let filename = "data//day7-short.txt"
+  let filename = "data//day7.txt"
+  case simplifile.read(filename){
+      Ok(x) -> x
+      Error(_) -> panic as "cant open test file"
+    }
 }
