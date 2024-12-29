@@ -10,6 +10,6 @@ pub fn start_test(){
 
   "....\n..^.\n"
   |> day6.find_start()
-  |> should.equal(#(1,2))
+  |> should.equal(#(2,1))
 
   }
