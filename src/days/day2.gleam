@@ -80,7 +80,7 @@ pub fn withrec(data, incr:Bool){
   // io.debug("withrec")
   // io.debug(data)
   // io.debug(incr)
-  let r = case data{
+  let _r = case data{
 
       [0, _] | [0]-> False
       [x,_ ] if incr && x > 4 -> False

@@ -16,6 +16,9 @@ import gleam/set
 //
 
 pub fn main() {
+  
+    get_test()
+
     let data = get_data()
     let start = find_start(data)
     |> io.debug

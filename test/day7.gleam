@@ -1,4 +1,4 @@
-import gleam/option.{Some,None}
+import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
 import days/day7

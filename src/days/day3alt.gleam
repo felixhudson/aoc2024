@@ -33,7 +33,7 @@ fn one_line(d:String) -> Int {
   }
 
 pub fn get_data() {// -> List(List(Int)){
-  let filename = "data\\aoc24-d3-short.txt"
+  let _filename = "data\\aoc24-d3-short.txt"
   let filename = "data\\aoc24-d3.txt"
   // let filename = "day2-short.txt"
   // result.unwrap(read(from:filename), "File not found")
@@ -46,7 +46,7 @@ pub fn get_data() {// -> List(List(Int)){
 
 
 pub fn parse_data(text: String) ->List(String){
-    let r: List(String)= string.replace(text, "\r\n", "\n")
+    let _r: List(String)= string.replace(text, "\r\n", "\n")
     |> string.split("\n")
     // let d: List(List(String)) = 
     //return

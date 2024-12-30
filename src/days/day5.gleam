@@ -24,6 +24,9 @@ import gleam/option.{Some,None}
 
 
 pub fn main(){
+
+    test_data()
+
     // let store : Graph = dict.new()
     let store : RuleRecord = new_rulerecord()
     
@@ -166,12 +169,6 @@ pub fn insert_set(r:RuleRecord, extra:Rule){
     AllRules(set.insert(r.good, extra), set.insert(r.bad, rev))
 }
 
-fn lenght_test(d:List(a)) {
-    case list.length(d) {
-        x if x % 10 == 0 -> {io.debug("loop " <> int.to_string(x)) io.debug(d) ""}
-        _ -> ""
-      }
-  }
 
 
 // the list of rules is cicular so we need to not look at recursion

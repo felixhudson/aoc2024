@@ -27,40 +27,13 @@ pub fn get_data() {// -> List(List(Int)){
 
 
 pub fn parse_data(text: String) ->List(String){
-    let r: List(String)= string.replace(text, "\r\n", "\n")
+    let _r: List(String)= string.replace(text, "\r\n", "\n")
     |> string.split(")")
     // let d: List(List(String)) = 
     //return
 }
 
-//recparse("mulzz(z,)", ["m","u"])
-//
-fn recparse(s) {
-    case s{
-        ["m","u","l","(", ..rest] -> take_digits(rest)
-        _ -> []
-      }
-  }
 
-fn take_digits(d:List( String )) {
-
-  }
-
-fn find_digits(d:String) {
-    case d{
-        "1" -> True
-        "2" -> True
-        "3" -> True
-        "4" -> True
-        "5" -> True
-        "6" -> True
-        "7" -> True
-        "8" -> True
-        "9" -> True
-        "0" -> True
-        _ -> False
-    }
-}
 
 fn filter_chars(d:String) {
     case d{

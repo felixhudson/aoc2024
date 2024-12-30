@@ -1,11 +1,10 @@
-import gleam/io
 import gleam/list
 import gleeunit/should
 import gleam/dict
 import gleam/set
 import gleam/string
 import gleeunit
-import days/day5.{type Graph}
+import days/day5
 
 
 pub fn main(){
@@ -62,14 +61,14 @@ pub fn sequence_test() {
   |> day5.datainsert(#(15,2))
   |> day5.datainsert(#(2,10))
 
-  let book = [ 15, 32, 13, 96, 47, 29, 78 ]
+  let _book = [ 15, 32, 13, 96, 47, 29, 78 ]
   let target = 32
   day5.bfs_all(d,[15],[], target)
   |> should.equal([10,2,15])
 }
 
 pub fn set_test() {
-    let rules : day5.RuleSet = set.new()
+    let _rules : day5.RuleSet = set.new()
     |> set.insert(#(1,2))
     |> set.insert(#(99,98))
 

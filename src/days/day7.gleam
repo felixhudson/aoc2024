@@ -10,8 +10,8 @@ pub fn main(){
     [2,3,4]
     |> try_comb(9)
 
-    "1234: 1 2 3 4\r\n222: 3 4 5s"
-    |> parse_text
+    // "1234: 1 2 3 4\r\n222: 3 4 5s"
+    // |> parse_text
 
     get_data()
     |> parse_text
@@ -72,7 +72,7 @@ fn make_element(d:#(String, String) ){
  
 
 fn parse_text(d:String){
-    let r = string.replace(d,"\r\n","\n")
+    let _r = string.replace(d,"\r\n","\n")
     |> string.split("\n")
     |> list.filter(fn(x) { x !=""})
     |> list.map(string.split_once(_,":") )
@@ -94,7 +94,7 @@ fn parse_text(d:String){
 }
 
 fn get_data() -> String {
-  let filename = "data//day7-short.txt"
+  let _filename = "data//day7-short.txt"
   let filename = "data//day7.txt"
   case simplifile.read(filename){
       Ok(x) -> x

@@ -1,6 +1,5 @@
 import gleam/list
 import gleam/string
-import gleam/io
 import gleeunit
 import gleeunit/should
 import days/day3alt

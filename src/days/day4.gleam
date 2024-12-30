@@ -6,6 +6,8 @@ import gleam/dict.{type Dict}
 
 
 pub fn main() {
+    test_data()
+
     let loc = get_data()
     |> split_file()
     |> string.to_graphemes
@@ -53,7 +55,7 @@ SAMXS"
 }
 
 fn get_data() {
-    let filename = "data\\day4-short.txt"
+    let _filename = "data\\day4-short.txt"
     let filename = "data\\day4.txt"
     case simplifile.read(from:filename){
       Ok( x ) -> x
