@@ -31,7 +31,7 @@ pub fn main() {
 pub fn filter_antipodes(d:List(#(Int,Int))) -> List(Result(#(Int, Int), Int)){
   case d{
      [#(x,y), ..rest]  if x < 0  || y < 0 -> [Error(x), ..filter_antipodes(rest) ]
-     [#(x,y), ..rest]  if x > 11 || y > 11 -> [Error(x), ..filter_antipodes(rest) ]
+     [#(x,y), ..rest]  if x > 49 || y > 49 -> [Error(x), ..filter_antipodes(rest) ]
      [g, ..rest] -> [Ok(g), ..filter_antipodes(rest)] 
      [] -> []
     }
@@ -46,7 +46,7 @@ pub fn prepare_values(d: List(Antenna)){
   }
 
 fn get_data() -> String {
-  let filename = "data\\aoc24-d8-short.txt"
+  let filename = "data\\aoc24-d8.txt"
   case simplifile.read(filename){
       Ok(x) -> string.replace(x,"\r\n","\n")
       Error(_) -> panic as "Cannot open file"
