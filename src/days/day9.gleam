@@ -3,16 +3,57 @@ import gleam/result
 import gleam/string
 import gleam/int
 import gleam/list
+import simplifile
 
 pub fn main() {
-  let input = "2333133121414131402"
+  io.debug("hello from day9")
+  // short data
+  // let input = "2333133121414131402"
+  let input = get_data()
   |> parse_to_ints
   |> result.all()
- 
+  // |> io.debug
+
   use two <- result.map(input)
-  two_lists(two)
-  |> io.debug
+  let a = two_lists(two)
+
+  use diskmap <- result.map(a)
+  let sectors = find_ids(diskmap.0)
+  // |> io.debug
+  let filledholes = fill_holes(diskmap.1,sectors)
+  // |> io.debug
+
+  // expand sector data
+  let newsectors = list.map(sectors, fn(x) { list.repeat(x.0,x.1)})
+
+  // merge sectors with new holes
+  let new_data = list.interleave([newsectors, filledholes])
+  // |> io.debug
+  |> list.flatten
+  // |> result.all
+  // |> io.debug
+
+
+  // find length of all data on disk
+  let data_length = int.sum(diskmap.0)
+
+  let final_data = list.take(new_data, data_length)
+  // |>io.debug
+  //
+  list.index_map(final_data, fn(x,y) {x*y})
+  |> int.sum
+  |>io.debug
+
 }
+
+/// turn sector counts into id and sector count
+pub fn find_ids(sectors) {
+    list.index_map(sectors, fn(data,index) {
+          #(index,data)
+      })
+  }
+
+
 
 // fill_holes hole_sizes sector_counts
 // hole == 3 sector == 2 
@@ -20,6 +61,7 @@ pub fn main() {
 //
 //
 
+/// fill_holes hole_sizes sector_counts
 pub fn fill_holes(holes, sectors){
     fill_holes_rec(holes, list.reverse( sectors ), [],[],0)
     |> list.map(list.reverse)
@@ -50,11 +92,17 @@ pub fn fill_holes_rec(holes:List(Int), sectors:List(#(Int,Int)), acc:List(List(I
       }
   }
 
+type Sector = #(Int,Int)
 
+pub type Diskmap{
+    Diskmap(empty:List(Int), sectors:List(Sector))
+  }
 
-
-pub fn two_lists(input){
-  two_lists_rec(input, [],[])
+/// splits a list of ints into [size of each file] [empty space between each]
+pub fn two_lists(input) {
+  let lists = two_lists_rec(input, [],[])
+  use disk <- result.map(lists)
+  #(list.reverse(disk.0), list.reverse(disk.1))
 }
 
 fn two_lists_rec(d:List(Int),a,b){
@@ -68,8 +116,19 @@ fn two_lists_rec(d:List(Int),a,b){
 
 
 pub fn parse_to_ints(d:String) -> List(Result(Int,Nil)){
-  case string.pop_grapheme(d){
+
+  case string.pop_grapheme(string.replace(d,"\n","")){
       Ok(#(h,t)) -> [int.parse(h), ..parse_to_ints(t)]
       Error(_) ->  []
     }
   }
+
+
+fn get_data() -> String {
+  let filename = "data\\aoc24-d9.txt"
+  case simplifile.read(filename){
+      Ok(x) -> string.replace(x,"\r\n","\n")
+      Error(_) -> panic as "Cannot open file"
+   }
+
+}

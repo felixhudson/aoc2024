@@ -11,7 +11,7 @@ pub fn twolist_test(){
   [1,8,2,8,3,8,4]
   |> day9.two_lists
   |> should.be_ok
-  |> should.equal(#([4,3,2,1],[0,8,8,8]))
+  |> should.equal(#([1,2,3,4],[8,8,8,0]))
 
   }
 

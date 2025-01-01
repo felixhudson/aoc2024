@@ -1,5 +1,4 @@
 import gleam/set
-import gleam/io
 import gleam/result
 import gleam/list
 import gleeunit
