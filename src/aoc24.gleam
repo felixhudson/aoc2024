@@ -8,7 +8,8 @@ import gleam/io
 // import days/day5
 // import days/day6
 // import days/day7
-import days/day8
+// import days/day8
+import days/day9
 
 pub fn main() {
   io.println("Hello from aoc24!")
@@ -22,7 +23,7 @@ pub fn main() {
   // day5.main()
   // day6.main()
   // day7.main()
-  day8.main()
+  day9.main()
   
 
 }
