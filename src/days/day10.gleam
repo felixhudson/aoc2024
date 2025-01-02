@@ -1,3 +1,4 @@
+import simplifile
 import gleam/set
 import gleam/dict
 import gleam/io
@@ -14,7 +15,8 @@ import gleam/list
 pub fn main(){
     // 11198541019
     // 11157632118
-    let elements = "11198541019\r\n11157632118"
+    // let elements = "11198541019\r\n11157632118"
+    let elements = get_test_data()
     |> parse_grid()
 
     let matrix:Matrix = elements
@@ -24,8 +26,12 @@ pub fn main(){
     |> find_zeros()
     |> io.debug
 
-
-    find_paths(matrix, zeros, [])
+    {use trailhead <- list.map(zeros)
+    find_paths(matrix, [trailhead], [])
+    |> set.from_list
+    |> set.size
+    }
+    |> int.sum
     |> io.debug
 
   }
@@ -33,7 +39,7 @@ pub type Element = #(Int,Int,Int)
 pub type Matrix =set.Set(Element) 
 
 pub fn find_paths(matrix:Matrix,stack:List(Element),located) {
-    io.debug(stack)
+    // io.debug(stack)
     case stack{
       [#(9,x,y),..tail] ->  find_paths(matrix, tail,[#(9,x,y),..located])
       [#(n,x,y),..tail] -> { let new = search(matrix, x,y,n + 1)
@@ -93,3 +99,13 @@ fn parse_grid_rec(d:String, x,y) -> List(Element){
 //     |> list.map(result.all)
 //     |>result.all
 //   }
+
+
+fn get_test_data() {
+  let filename = "data\\aoc24-d10-short.txt"
+  let filename = "data\\aoc24-d10.txt"
+  case simplifile.read(filename){
+      Ok(x) -> string.replace(x,"\r\n","\n")
+      Error(_) -> panic as "Cannot open file"
+   }
+}
